@@ -1,5 +1,5 @@
-import QtQuick 2.2
-import org.kde.plasma.configuration 2.0
+import QtQuick
+import org.kde.plasma.configuration
 
 ConfigModel {
     ConfigCategory {
@@ -12,7 +12,7 @@ ConfigModel {
          icon: 'preferences-system-settings'
          source: 'config/ConfigData.qml'
     }
-        ConfigCategory {
+    ConfigCategory {
          name: i18n('Appearance')
          icon: 'preferences-desktop-color'
          source: 'config/ConfigAppearance.qml'

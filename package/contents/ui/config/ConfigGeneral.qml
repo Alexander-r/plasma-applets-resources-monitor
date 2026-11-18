@@ -1,10 +1,11 @@
-import QtQuick 2.2
-import QtQuick.Controls 1.3
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+import org.kde.kcmutils as KCMUtils
 
-Item {
-    
-    property alias cfg_updateInterval: updateIntervalSpinBox.value
+KCMUtils.SimpleKCM {
+    property alias cfg_updateInterval: updateIntervalSpinBox.realValue
     property alias cfg_fontScale: fontScale.value
     property alias cfg_showCpuMonitor: showCpuMonitor.checked
     property alias cfg_showNetMonitor: showNetMonitor.checked
@@ -15,96 +16,86 @@ Item {
     property alias cfg_enableHints: enableHints.checked
     property alias cfg_enableShadows: enableShadows.checked
 
-    GridLayout {
-        Layout.fillWidth: true
-        columns: 2
-        
-        Label {
-            text: i18n('Update interval:')
-            Layout.alignment: Qt.AlignRight
+    Kirigami.FormLayout {
+        RowLayout {
+            Kirigami.FormData.label: i18n('Update interval:')
+            DecimalSpinBox {
+                id: updateIntervalSpinBox
+                decimals: 1
+                realStepSize: 0.1
+                realFrom: 0.1
+                realTo: 3600
+            }
+            QQC2.Label {
+                text: i18nc('Abbreviation for seconds', 's')
+            }
         }
-        SpinBox {
-            id: updateIntervalSpinBox
-            decimals: 1
-            stepSize: 0.1
-            minimumValue: 0.1
-            suffix: i18nc('Abbreviation for seconds', 's')
+
+        RowLayout {
+            Kirigami.FormData.label: i18n('Font scale:')
+            QQC2.SpinBox {
+                id: fontScale
+                from: 1
+                to: 100
+                editable: true
+            }
+            QQC2.Label {
+                text: i18nc('Percent', '%')
+            }
         }
-        
-        Label {
-            text: i18n('Font scale:')
-            Layout.alignment: Qt.AlignRight
-        }
-        
-        SpinBox {
-            id: fontScale
-            minimumValue: 1
-            maximumValue: 100
-            suffix: i18nc('Percent', '%')
-        }
-        
+
         Item {
-            width: 2
-            height: 10
-            Layout.columnSpan: 2
+            Kirigami.FormData.isSection: true
         }
-        
-        CheckBox {
+
+        QQC2.CheckBox {
             id: showCpuMonitor
-            Layout.columnSpan: 1
+            Kirigami.FormData.label: i18n('CPU:')
             text: i18n('Show CPU monitor')
         }
-        
-        CheckBox {
+
+        QQC2.CheckBox {
             id: showClock
-            Layout.columnSpan: 1
             text: i18n('Show clock')
             enabled: showCpuMonitor.checked
         }
-        
-        CheckBox {
+
+        QQC2.CheckBox {
             id: showRamMonitor
-            Layout.columnSpan: 1
+            Kirigami.FormData.label: i18n('Memory:')
             text: i18n('Show RAM monitor')
         }
-        
-        CheckBox {
+
+        QQC2.CheckBox {
             id: memoryInPercent
-            Layout.columnSpan: 1
             text: i18n('Memory in percentage')
             enabled: showRamMonitor.checked
         }
-        
-        CheckBox {
+
+        QQC2.CheckBox {
             id: showNetMonitor
-            Layout.columnSpan: 1
+            Kirigami.FormData.label: i18n('Network:')
             text: i18n('Show network monitor')
-        }        
-        
-        Item {
-            width: 2
-            height: 10
-            Layout.columnSpan: 2
         }
-        
-        CheckBox {
+
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
+        QQC2.CheckBox {
             id: verticalLayout
-            Layout.columnSpan: 2
+            Kirigami.FormData.label: i18n('Appearance:')
             text: i18n('Vertical layout')
         }
-        
-        CheckBox {
+
+        QQC2.CheckBox {
             id: enableHints
-            Layout.columnSpan: 2
             text: i18n('Enable hints')
         }
 
-        CheckBox {
+        QQC2.CheckBox {
             id: enableShadows
-            Layout.columnSpan: 2
             text: i18n('Drop shadows')
         }
-
     }
-    
 }

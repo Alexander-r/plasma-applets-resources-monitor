@@ -1,68 +1,63 @@
-import QtQuick 2.2
-import QtQuick.Controls 1.3
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+import org.kde.kcmutils as KCMUtils
 
-Item {
-    
+KCMUtils.SimpleKCM {
     property alias cfg_networkSensorDownload: networkSensorDownload.text
-    property alias cfg_downloadMaxMbps: downloadMaxMbps.value
+    property alias cfg_downloadMaxMbps: downloadMaxMbps.realValue
     property alias cfg_networkSensorUpload: networkSensorUpload.text
-    property alias cfg_uploadMaxMbps: uploadMaxMbps.value
+    property alias cfg_uploadMaxMbps: uploadMaxMbps.realValue
 
-    GridLayout {
-        Layout.fillWidth: true
-        columns: 2
-        
-        Label {
-            text: i18n('Network download sensor')
-            Layout.alignment: Qt.AlignRight
-        }
-        TextField {
+    Kirigami.FormLayout {
+        QQC2.TextField {
             id: networkSensorDownload
-            placeholderText: 'network/interfaces/eth0/receiver/data'
-            Layout.preferredWidth: 500
-            onTextChanged: cfg_networkSensorDownload = text
+            Kirigami.FormData.label: i18n('Network download sensor:')
+            placeholderText: 'network/all/download'
+            Layout.preferredWidth: Kirigami.Units.gridUnit * 20
         }
-        
-        Label {
-            text: i18n('Max download speed:')
-            Layout.alignment: Qt.AlignRight
+
+        RowLayout {
+            Kirigami.FormData.label: i18n('Max download speed:')
+            DecimalSpinBox {
+                id: downloadMaxMbps
+                decimals: 1
+                realStepSize: 0.5
+                realFrom: 0.5
+                realTo: 100000
+            }
+            QQC2.Label {
+                text: i18nc('Abbreviation for Mbit/s', 'Mbit/s')
+            }
         }
-        SpinBox {
-            id: downloadMaxMbps
-            decimals: 1
-            stepSize: 0.5
-            minimumValue: 0.5
-            maximumValue: 100000
-            value: cfg_downloadMaxMbps
-            suffix: i18nc('Abbreviation for Mbit/s', ' Mbit/s')
-        }
-        
-        Label {
-            text: i18n('Network upload sensor')
-            Layout.alignment: Qt.AlignRight
-        }
-        TextField {
+
+        QQC2.TextField {
             id: networkSensorUpload
-            placeholderText: 'network/interfaces/eth0/transmitter/data'
-            Layout.preferredWidth: 500
-            onTextChanged: cfg_networkSensorUpload = text
+            Kirigami.FormData.label: i18n('Network upload sensor:')
+            placeholderText: 'network/all/upload'
+            Layout.preferredWidth: Kirigami.Units.gridUnit * 20
         }
-        
-        Label {
-            text: i18n('Max upload speed:')
-            Layout.alignment: Qt.AlignRight
+
+        RowLayout {
+            Kirigami.FormData.label: i18n('Max upload speed:')
+            DecimalSpinBox {
+                id: uploadMaxMbps
+                decimals: 1
+                realStepSize: 0.5
+                realFrom: 0.5
+                realTo: 100000
+            }
+            QQC2.Label {
+                text: i18nc('Abbreviation for Mbit/s', 'Mbit/s')
+            }
         }
-        SpinBox {
-            id: uploadMaxMbps
-            decimals: 1
-            stepSize: 0.5
-            minimumValue: 0.5
-            maximumValue: 100000
-            value: cfg_uploadMaxMbps
-            suffix: i18nc('Abbreviation for Mbit/s', ' Mbit/s')
-        }        
-        
+
+        QQC2.Label {
+            Layout.preferredWidth: Kirigami.Units.gridUnit * 20
+            wrapMode: Text.WordWrap
+            font: Kirigami.Theme.smallFont
+            text: i18n('Sensor ids come from ksystemstats, e.g. "network/all/download" for all interfaces or "network/<interface>/download" for one. Run "kstatsviewer --list" to see the available sensors.')
+        }
     }
-    
 }

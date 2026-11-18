@@ -40,13 +40,13 @@
 
     <group name="Data">
         <entry name="networkSensorDownload" type="String">
-            <default>network/interfaces/eth0/receiver/data</default>
+            <default>network/all/download</default>
         </entry>
         <entry name="downloadMaxMbps" type="Double">
             <default>1000</default>
         </entry>
         <entry name="networkSensorUpload" type="String">
-            <default>network/interfaces/eth0/transmitter/data</default>
+            <default>network/all/upload</default>
         </entry>
         <entry name="uploadMaxMbps" type="Double">
             <default>1000</default>

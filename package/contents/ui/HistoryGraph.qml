@@ -14,34 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http: //www.gnu.org/licenses/>.
  */
-import QtQuick 2.2
+import QtQuick
 
 Item {
     id: historyGraph
-    
+
     anchors.fill: parent
-    
+
     property var listViewModel
     property color barColor
-    
+    required property int granularity
+
     ListView {
         anchors.fill: parent
-        
+
         interactive: false
         orientation: Qt.Horizontal
         layoutDirection: Qt.LeftToRight
         spacing: 0
-        
-        model: listViewModel
-        
-        delegate: Rectangle {
-            width: historyGraph.width / graphGranularity
-            height: historyGraph.height * graphItemPercent
-            x: 0
-            y: historyGraph.height - height
-            color: barColor
-            radius: 3
+
+        model: historyGraph.listViewModel
+
+        // ListView positions delegates itself, so a bar can't set its own y.
+        // Use a full-height slot and anchor the bar to its bottom instead.
+        delegate: Item {
+            required property real graphItemPercent
+
+            width: historyGraph.width / historyGraph.granularity
+            height: historyGraph.height
+
+            Rectangle {
+                anchors.bottom: parent.bottom
+                width: parent.width
+                height: parent.height * Math.max(0, Math.min(1, parent.graphItemPercent))
+                color: historyGraph.barColor
+                radius: 3
+            }
         }
     }
-    
 }
