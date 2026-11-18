@@ -13,6 +13,37 @@ Flow {
     property int parentWidth: 0
     property int parentHeight: 0
 
+    // Share the given length along the flow between the graphs without an explicit size.
+    // Only valid when that length doesn't come from our own size (across a panel, on the
+    // desktop); along a panel the graphs are sized from the panel thickness instead.
+    property bool fillLength: false
+    readonly property real autoLength: {
+        if (!fillLength)
+            return 0;
+
+        const axis = isVertical ? 1 : 0;
+        let fixedLength = 0;
+        let autoCount = 0;
+        let visibleCount = 0;
+        for (let i = 0; i < repeater.count; i++) {
+            const loaderItem = repeater.itemAt(i);
+            if (!loaderItem?.item?.visible)
+                continue;
+
+            visibleCount++;
+            if (loaderItem.modelData.sizes[axis] !== -1) {
+                fixedLength += loaderItem.modelData.sizes[axis];
+            } else {
+                autoCount++;
+            }
+        }
+        if (autoCount === 0)
+            return 0;
+
+        const available = isVertical ? parentHeight : parentWidth;
+        return Math.max(0, (available - fixedLength - spacing * Math.max(visibleCount - 1, 0)) / autoCount);
+    }
+
     flow: isVertical ? GridLayout.TopToBottom : GridLayout.LeftToRight
 
     Repeater {
@@ -28,6 +59,8 @@ Flow {
                     return modelData.sizes[0];
                 if (root.isVertical)
                     return root.parentWidth;
+                if (root.fillLength)
+                    return Math.max(item?.minimumWidth ?? 0, root.autoLength);
                 if (modelData.type.endsWith("Text"))
                     return Math.max(item?.minimumWidth ?? 0, root.parentHeight);
 
@@ -38,8 +71,12 @@ Flow {
                     return 0;
                 if (modelData.sizes[1] !== -1)
                     return modelData.sizes[1];
+                if (!root.isVertical)
+                    return root.parentHeight;
+                if (root.fillLength)
+                    return root.autoLength;
 
-                return root.isVertical ? root.parentWidth : root.parentHeight;
+                return root.parentWidth;
             }
 
             Component.onCompleted: {

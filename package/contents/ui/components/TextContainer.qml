@@ -58,7 +58,9 @@ Item {
         font.italic: Plasmoid.configuration.autoFontAndSize ? Kirigami.Theme.defaultFont.italic : Plasmoid.configuration.italicText
         font.pixelSize: fontSize == -1 ? (Plasmoid.configuration.autoFontAndSize ? 3 * Kirigami.Theme.defaultFont.pixelSize : _pointToPixel(Plasmoid.configuration.fontSize)) : _pointToPixel(fontSize)
 
-        fontSizeMode: Plasmoid.configuration.keepFontSize ? Text.FixedSize : Text.VerticalFit
+        // Shrink to fit the graph height, unless a size was chosen for this graph
+        // (or globally with "Keep specified font size")
+        fontSizeMode: (Plasmoid.configuration.keepFontSize || root.fontSize !== -1) ? Text.FixedSize : Text.VerticalFit
         minimumPixelSize: 1
     }
     FontMetrics {

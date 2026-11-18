@@ -27,6 +27,20 @@ PlasmoidItem {
         }
     }
 
+    // Graphs direction: follows the panel unless forced in the settings
+    property bool graphsIsVertical: {
+        switch (Plasmoid.configuration.graphsDirection) {
+        case "horizontal":
+            return false;
+        case "vertical":
+            return true;
+        default:
+            return root.isVertical;
+        }
+    }
+    // Graphs laid out along a panel: the widget length comes from the graphs
+    readonly property bool alongPanel: (Plasmoid.formFactor === PlasmaCore.Types.Horizontal && !graphsIsVertical) || (Plasmoid.formFactor === PlasmaCore.Types.Vertical && graphsIsVertical)
+
     // Settings properties
     property var graphsModel: GraphFns.parse(Plasmoid.configuration.graphs)
     property string clickApplication: Plasmoid.configuration.clickApplication
@@ -53,9 +67,19 @@ PlasmoidItem {
     fullRepresentation: MouseArea {
         acceptedButtons: clickApplication !== "" ? Qt.LeftButton : Qt.NoButton
 
-        // Propagate child size to parent
-        Layout.preferredWidth: isVertical ? Kirigami.Units.iconSizes.small : graphView.implicitWidth + Kirigami.Units.smallSpacing
-        Layout.preferredHeight: isVertical ? graphView.implicitHeight + Kirigami.Units.smallSpacing : Kirigami.Units.iconSizes.small
+        // Propagate child size to parent. Along a panel the length comes from the graphs;
+        // otherwise the graphs fill the given space, so the length must not depend on them
+        // (that would grow forever): across a panel the widget is square.
+        Layout.preferredWidth: {
+            if (alongPanel && !graphsIsVertical)
+                return graphView.implicitWidth + Kirigami.Units.smallSpacing;
+            return isVertical ? Kirigami.Units.iconSizes.small : height;
+        }
+        Layout.preferredHeight: {
+            if (alongPanel && graphsIsVertical)
+                return graphView.implicitHeight + Kirigami.Units.smallSpacing;
+            return isVertical ? width : Kirigami.Units.iconSizes.small;
+        }
         // The panel shrinks applets toward their minimum when it runs out of space,
         // and falls back to the panel thickness when none is set. The graphs can't
         // shrink, so require the full length along the panel.
@@ -85,7 +109,8 @@ PlasmoidItem {
             updateInterval: Plasmoid.configuration.updateInterval * 1000
 
             spacing: Plasmoid.configuration.graphSpacing
-            isVertical: root.isVertical
+            isVertical: root.graphsIsVertical
+            fillLength: !root.alongPanel
 
             parentWidth: parent.width
             parentHeight: parent.height
