@@ -1,0 +1,63 @@
+import QtQuick
+import "./base" as RMBase
+import "../sensors" as RMSensors
+import "../../code/formatter.js" as RMFormatter
+
+RMBase.BaseSensorText {
+    id: root
+    objectName: "NetworkText"
+    sensor.enabled: false // Disable base sensor due to use custom one
+    _update: networkSpeed.execute
+    sensorsFormat: [unit.id]
+
+    // Settings
+    property var ignoredInterfaces: []
+    property bool icons: false
+    readonly property var unit: RMFormatter.getUnitInfo(sensorsType[1], i18nc)
+
+    // Retrieve chart index and swap it if needed
+    readonly property int downloadIndex: sensorsType[0] ? 1 : 0
+    readonly property int uploadIndex: sensorsType[0] ? 0 : 1
+
+    // Text options
+    textContainer {
+        displayment: "hover-hints"
+
+        hints: {
+            const receiving = i18nc("Graph label", "Receiving");
+            const sending = i18nc("Graph label", "Sending");
+            return sensorsType[0] ? [sending, receiving, ""] : [receiving, sending, ""];
+        }
+    }
+
+    // Custom sensor
+    RMSensors.NetworkSpeed {
+        id: networkSpeed
+        ignoredInterfaces: root.ignoredInterfaces
+
+        onUpdated: {
+            // Apply selected unit
+            const downloadValue = download * unit.byteDiff;
+            const uploadValue = upload * unit.byteDiff;
+
+            // Update labels
+            if (textContainer.enabled) {
+                _updateData(downloadIndex, downloadValue);
+                _updateData(uploadIndex, uploadValue);
+            }
+        }
+    }
+
+    function _updateData(index, value) {
+        let icon = "";
+        if (root.icons) {
+            if (index == downloadIndex) {
+                icon = "↓\u2009";
+            } else if (index == uploadIndex) {
+                icon = "↑\u2009";
+            }
+        }
+
+        textContainer.setValue(index, value, icon + RMFormatter.formatValue(value, unit, Qt.locale()));
+    }
+}

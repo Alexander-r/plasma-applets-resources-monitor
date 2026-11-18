@@ -1,20 +1,24 @@
 {
-    "KPackageStructure": "Plasma/Applet",
-    "KPlugin": {
-        "Authors": [
-            {
-                "Email": "clearmartin@seznam.cz",
-                "Name": "Kotelnik"
-            }
-        ],
-        "Category": "System Information",
-        "Description": "Plasmoid for monitoring CPU, memory and network",
-        "Icon": "utilities-system-monitor",
-        "Id": "org.kde.resourcesMonitor",
-        "License": "GPL-2.0+",
-        "Name": "Resources Monitor",
-        "Version": "0.2",
-        "Website": "https://github.com/kotelnik/plasma-applet-resources-monitor"
-    },
-    "X-Plasma-API-Minimum-Version": "6.0"
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Kotelnik",
+        "Email": "clearmartin@seznam.cz"
+      },
+      {
+        "Name": "orblazer",
+        "Website": "https://github.com/orblazer"
+      }
+    ],
+    "Id": "org.kde.resourcesMonitor",
+    "Version": "2.0.0",
+    "Category": "System Information",
+    "Icon": "utilities-system-monitor",
+    "License": "GPL-3.0+",
+    "Name": "Resources Monitor",
+    "Description": "Plasmoid for monitoring CPU, memory, network traffic, GPUs, disks and batteries.",
+    "Website": "https://github.com/Alexander-r/plasma-applets-resources-monitor"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0"
 }

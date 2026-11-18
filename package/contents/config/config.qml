@@ -3,18 +3,18 @@ import org.kde.plasma.configuration
 
 ConfigModel {
     ConfigCategory {
-         name: i18n('General')
-         icon: 'preferences-system-windows'
-         source: 'config/ConfigGeneral.qml'
+        name: i18nc("Config header", "Graphs")
+        icon: 'office-chart-line-stacked'
+        source: 'config/ConfigGraph.qml'
     }
     ConfigCategory {
-         name: i18n('Data')
-         icon: 'preferences-system-settings'
-         source: 'config/ConfigData.qml'
+        name: i18nc("Config header", "Appearance")
+        icon: 'preferences-desktop-color'
+        source: 'config/ConfigAppearance.qml'
     }
     ConfigCategory {
-         name: i18n('Appearance')
-         icon: 'preferences-desktop-color'
-         source: 'config/ConfigAppearance.qml'
+        name: i18nc("Config header", "Misc")
+        icon: 'preferences-system-other'
+        source: 'config/ConfigMisc.qml'
     }
 }
